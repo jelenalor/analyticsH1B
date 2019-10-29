@@ -1,14 +1,45 @@
 import pandas as pd
+import dash
+import dash_html_components as html
+import dash_core_components as dcc
+from dash.dependencies import Input, Output
+
+from apps.rolePage import returnRolePage
+from apps.companyPage import returnCompanyPage
+from apps.cityPage import returnCityPage
 
 
-""" Data -> was scraped for 2019 but as it turns out when request was made for 
-the company that did not have any visa applications in 2019 - the code automatically 
-scrapped the data for 2018 (or the last available data for that company) """
-""" this is likely to impact only small companies, and therefore here we only analyse the
-results from 2019 """
-""" Future project ideas -> to scrap outstanding data and compare which companies/industries apply and get visa
-e.g. how random is the random lottery """
 
-df = pd.read_csv(r"data/h1b2019.csv")
 
-print(df.head(5))
+""" App """
+# external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+# external_stylesheets=external_stylesheets
+app = dash.Dash(__name__)
+
+
+""" Define Layout with three tabs"""
+
+app.layout = html.Div([
+    dcc.Tabs(id="tabs", value='tab-1', children=[
+        dcc.Tab(label='Explore by City', value='tab-1'),
+        dcc.Tab(label='Explore by Role', value='tab-2'),
+        dcc.Tab(label='Explore by Company', value='tab-3'),
+    ]),
+    html.Div(id='tabs-content')
+])
+
+
+""" Assign Each Tab a Content """
+@app.callback(Output('tabs-content', 'children'),
+              [Input('tabs', 'value')])
+def render_content(tab):
+    if tab == 'tab-1':
+        return returnCityPage()
+    elif tab == 'tab-2':
+        return returnRolePage()
+    elif tab == 'tab-3':
+        return returnCompanyPage()
+
+
+if __name__ == '__main__':
+    app.run_server(debug=True)
