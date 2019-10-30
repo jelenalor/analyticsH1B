@@ -3,18 +3,12 @@ import dash
 import dash_html_components as html
 import dash_core_components as dcc
 from dash.dependencies import Input, Output
-
-from apps.rolePage import returnRolePage
-from apps.companyPage import returnCompanyPage
-from apps.cityPage import returnCityPage
-
-
-
+from app import app
+from apps import cityPage, rolePage, companyPage
 
 """ App """
 # external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 # external_stylesheets=external_stylesheets
-app = dash.Dash(__name__)
 
 
 """ Define Layout with three tabs"""
@@ -34,11 +28,13 @@ app.layout = html.Div([
               [Input('tabs', 'value')])
 def render_content(tab):
     if tab == 'tab-1':
-        return returnCityPage()
+        return cityPage.layout
     elif tab == 'tab-2':
-        return returnRolePage()
+        return rolePage.layout
     elif tab == 'tab-3':
-        return returnCompanyPage()
+        return companyPage.layout
+
+
 
 
 if __name__ == '__main__':
