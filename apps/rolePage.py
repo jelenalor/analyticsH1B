@@ -1,4 +1,3 @@
-import dash_html_components as html
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
@@ -6,17 +5,16 @@ from udfs import udf_rol
 from udfs import udf
 from app import app
 
-key_title_tokens = ["engin", "develop", "architect", "administr", \
-                        "account", "auditor", \
-                        "analyst", "manag", "consult", "associ",\
-                        "presid", "programm", "professor"]
+
+key_title_tokens = udf.key_title_tokens
 
 
 def returnTopRoles():
     return html.Div([html.H3('Top Roles Analysis',
                              style={"textAlign": "center"}),
-                     html.P("Analysent ", style={'padding': '10px 10px',
+                     html.P(["Choose above the 'root' word for the type of roles you would like to analyse.", html.Br(), "Below we present the top job titles and its corresponding mean salary for this 'root' word'."], style={'padding': '10px 10px',
                                                   "textAlign": "center"}),
+
         dcc.Graph(id='top_roles_fig2',
                   clickData={'points': [{'y': 'analyst',
                                          'text': 'analyst'}]},
@@ -24,10 +22,11 @@ def returnTopRoles():
                      ], style={'width': '70%',
                                'height': '700px', 'margin': '20px 250px'})
 
+
 def returnTopLocations():
     return html.Div([html.H3('Top Locations Analysis',
                              style={"textAlign": "center"}),
-                     html.P("Analysent ", style={'padding': '10px 10px',
+                     html.P("Explore the cities with the most jobs and the corresponding average salary for the above role type.", style={'padding': '10px 10px',
                                                   "textAlign": "center"}),
         dcc.Graph(id='top_loc_fig2',
                   clickData={'points': [{'y': 'analyst',
@@ -40,7 +39,7 @@ def returnTopLocations():
 def returnTopCompanies():
     return html.Div([html.H3('Top Companies Analysis',
                              style={"textAlign": "center"}),
-                     html.P("Analysent ", style={'padding': '10px 10px',
+                     html.P("Explore companies with the most jobs available and the corresponding average salary these companies pay for the above chosen role type.", style={'padding': '10px 10px',
                                                   "textAlign": "center"}),
         dcc.Graph(id='top_comp_fig2',
                   clickData={'points': [{'y': 'analyst',

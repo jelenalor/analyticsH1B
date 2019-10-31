@@ -1,18 +1,14 @@
-import dash_html_components as html
 import dash_core_components as dcc
 import dash_html_components as html
-from dash.dependencies import Input, Output, State
-import json
+from dash.dependencies import Input, Output
 from app import app
 from udfs import udf
 
-# https://plot.ly/python/horizontal-bar-charts/
-
 
 def returnScatter():
-    return html.Div([html.H3('Roles Count & Salary by Company',
+    return html.Div([html.H3('Roles Count & Salary by City',
                              style={"textAlign": "center"}),
-                     html.P('Hover over any of the points to discover which city it represents. Click on the point to continue analysing the patterns for chosen city. Switch between displaying mean, maximum or minimum salary. ', style={'padding': '10px 10px',
+                     html.P('Hover over any of the points to discover which city it represents. Pick the city using the dropdown or by clicking on any of the points to discover the patterns for a chosen city. Switch between displaying mean, maximum or minimum salary. ', style={'padding': '10px 10px',
                                                   "textAlign": "center"}),
          dcc.RadioItems(
              id='choice-items1',
@@ -21,6 +17,11 @@ def returnScatter():
              value='mean',
              inputStyle={'display': 'inline-block',
                          'padding': '0 0'}),
+        dcc.Dropdown(id="dropdown1", placeholder="Pick a city",
+                     options=[{'label': str(i), 'value': i} for i in udf.name], style={"width": '50%',
+                                                                                "textAlign": "center",
+                                                                                'margin': '0 auto'}),
+
         dcc.Graph(id='crossfilter-scatter1',
                   figure=udf.create_scatter("mean", "NEW YORK"),
                   clickData={'points': [{'customdata': 'NEW YORK',
@@ -58,7 +59,7 @@ def returnTopRoles():
 def returnSalDist():
     return html.Div([html.H3('Salary Distribution & Role Analysis',
                              style={"textAlign": "center"}),
-                     html.P("Analyst salaries vary widely. Discover which type of analysts have the highest pay. Check it out for other job roles by clicking on the corresponding bar plot", style={'padding': '10px 10px',
+                     html.P("Analyst salaries vary widely. Discover which type of analysts have the highest pay. Check it out for other job roles by clicking on the corresponding bar on the plot above", style={'padding': '10px 10px',
                                                   "textAlign": "center"}),
                     dcc.Graph(id='sal_dist_fig1')
                      ], style={'width': '70%',
@@ -84,32 +85,32 @@ layout = html.Div([
 
                     ], style={'margin': 0,})
 
+prev_value = ""
 """Tab1 Radio button"""
 @app.callback(Output('crossfilter-scatter1', 'figure'),
               [Input('choice-items1', 'value'),
-               Input('crossfilter-scatter1', 'clickData')])
-def updateScatter(value, clickData):
-    city = clickData["points"][0]['customdata']
+               Input('crossfilter-scatter1', 'clickData'),
+               Input('dropdown1', 'value')])
+def updateScatter(value, clickData, dropdown):
+    if dropdown is not None and prev_value != dropdown:
+        city = dropdown
+    else:
+        city = clickData["points"][0]['customdata']
+
     return udf.create_scatter(str(value), city)
 
 
-# @app.callback(Output('intermediate-value', 'children'),
-#               [Input('crossfilter-scatter1', 'clickData')])
-# def clean_data(clickData):
-#      city = clickData["points"][0]['customdata']
-#      # some expensive clean data step
-#      dff = udf.df[udf.df.city == city]
-#
-#      # more generally, this line would be
-#      # json.dumps(cleaned_df)
-#      return json.dumps(dff)
 
 """Top Companies"""
 @app.callback(Output('top_companies_fig1', 'figure'),
               [Input('choice-items1', 'value'),
-               Input('crossfilter-scatter1', 'clickData')])
-def updateTopCompanies(value, clickData):
-    city = clickData["points"][0]['customdata']
+               Input('crossfilter-scatter1', 'clickData'),
+               Input('dropdown1', 'value')])
+def updateTopCompanies(value, clickData, dropdown):
+    if dropdown is not None and prev_value != dropdown:
+        city = dropdown
+    else:
+        city = clickData["points"][0]['customdata']
     return udf.createMultiGraph(udf.getDataTopComp(city, str(value)), "None")
 
 
@@ -117,9 +118,14 @@ def updateTopCompanies(value, clickData):
 @app.callback(Output('top_roles_fig1', 'figure'),
               [Input('choice-items1', 'value'),
                Input('crossfilter-scatter1', 'clickData'),
-               Input('top_roles_fig1', 'clickData')])
-def updateTopCompanies(value, clickData, roleClickData):
-    city = clickData["points"][0]['customdata']
+               Input('top_roles_fig1', 'clickData'),
+               Input('dropdown1', 'value')])
+def updateTopCompanies(value, clickData, roleClickData, dropdown):
+    if dropdown is not None and prev_value != dropdown:
+        city = dropdown
+    else:
+        city = clickData["points"][0]['customdata']
+
     role = roleClickData["points"][0]['y']
     return udf.createMultiGraph(udf.dataForTopRoles(city, str(value)), str(role))
 
@@ -127,9 +133,13 @@ def updateTopCompanies(value, clickData, roleClickData):
 @app.callback(
     Output('sal_dist_fig1', 'figure'),
     [Input('crossfilter-scatter1', 'clickData'),
-    Input('top_roles_fig1', 'clickData')])
-def update_figure(clickData, roleClickData):
-    city = clickData["points"][0]['customdata']
+    Input('top_roles_fig1', 'clickData'),
+    Input('dropdown1', 'value')])
+def update_figure(clickData, roleClickData, dropdown):
+    if dropdown is not None and prev_value != dropdown:
+        city = dropdown
+    else:
+        city = clickData["points"][0]['customdata']
     role = roleClickData["points"][0]['y']
     return udf.createBoxPlot(str(city), str(role))
 
