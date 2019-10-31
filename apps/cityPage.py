@@ -4,7 +4,7 @@ import dash_html_components as html
 from dash.dependencies import Input, Output, State
 import json
 from app import app
-import udf
+from udfs import udf
 
 # https://plot.ly/python/horizontal-bar-charts/
 
