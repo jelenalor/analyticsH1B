@@ -2,7 +2,6 @@ import pandas as pd
 import dash_html_components as html
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
-import numpy as np
 
 
 """ Data -> was scraped for 2019 but as it turns out when request was made for 
@@ -13,9 +12,15 @@ results from 2019 """
 """ Future project ideas -> to scrap outstanding data and compare which companies/industries apply and get visa
 e.g. how random is the random lottery """
 
+ctags = {1: "#f35588",
+         2: "#ffbbb4",
+         3: "#71a95a",
+         4: "#007944"}
 
 """ Import Data """
 df = pd.read_csv(r"data/h1b19_clean.csv")
+"""Some base salary shows less than 20k, which is likely to be contractor etc job, remove these instances"""
+df = df[df["base_salary"] >20000]
 
 """ CITY PAGE """
 """ Data clean and transform """
@@ -26,7 +31,7 @@ name = df.groupby("city").agg({"company": "count"}).sort_values(by="company",
 
 key_title_tokens = ["engin", "develop", "architect", "administr",
                         "account", "auditor", "analyst", "manag", "consult", "associ",
-                        "presid", "programm", "professor"]
+                        "presid", "programm"]
 
 
 def create_scatter(salary_choice, city):
@@ -58,7 +63,7 @@ def create_scatter(salary_choice, city):
                 'size': 15,
                 'opacity': 0.8,
                 'line': {'width': 0.5, 'color': 'black'},
-                'color': '#f35588',}
+                'color': ctags[1],}
         ))
 
     traces.append(go.Scatter(
@@ -70,7 +75,7 @@ def create_scatter(salary_choice, city):
         marker={
             'size': 15,
             'line': {'width': 0.5, 'color': 'black'},
-            'color': '#71a95a'}
+            'color': ctags[3]}
     ))
 
     return {
@@ -121,9 +126,9 @@ def createMultiGraph(items, y_click):
             x=y_count,
             y=x,
             marker=dict(
-                color='#71a95a',
+                color=ctags[3],
                 line=dict(
-                    color='#71a95a',
+                    color=ctags[3],
                     width=1),
             ),
             name='Roles Count',
@@ -138,9 +143,9 @@ def createMultiGraph(items, y_click):
             x=[y_cl],
             y=[x_cl],
             marker=dict(
-                color='#f35588',
+                color=ctags[1],
                 line=dict(
-                    color='#f35588',
+                    color=ctags[1],
                     width=1),
             ),
             name='Roles Count - Selected',
@@ -152,9 +157,9 @@ def createMultiGraph(items, y_click):
             x=y_count,
             y=x,
             marker=dict(
-                color='#71a95a',
+                color=ctags[3],
                 line=dict(
-                    color='#71a95a',
+                    color=ctags[3],
                     width=1),
             ),
             name='Roles Count',
@@ -165,7 +170,7 @@ def createMultiGraph(items, y_click):
     fig.append_trace(go.Scatter(
         x=list(y_choice), y=list(x),
         mode='lines+markers',
-        line_color='#f35588',
+        line_color=ctags[1],
         name=salary_choice + ' salary',
     ), 1, 2)
 
@@ -173,7 +178,7 @@ def createMultiGraph(items, y_click):
         title=dict(text=city, font=dict(
             size=20,
             family='Comic Sans MS',
-            color="#f35588"
+            color=ctags[1]
         )),
         
         yaxis=dict(
@@ -280,7 +285,7 @@ def createBoxPlot(city, role):
     traces = []
     for r in x:
         traces.append(go.Box(y=dff[dff.tokens == r]["base_salary"],
-                         name=r, marker={"size": 4, "color": "#f35588"}))
+                         name=r, marker={"size": 4, "color": ctags[1]}))
 
     return {"data": traces,
             "layout": go.Layout(autosize=True,
@@ -288,7 +293,7 @@ def createBoxPlot(city, role):
                                            font=dict(
                                                size=20,
                                                family='Comic Sans MS',
-                                               color="#f35588")),
+                                               color=ctags[1])),
                                 margin={"l": 50, "b": 200, "r": 20, "t": 40},
                                 xaxis={"showticklabels": True},
                                 yaxis={"title": "Salary Distribution"},
@@ -311,14 +316,14 @@ def returnFooter():
                                     'left': '40%',
                                     'color': 'white',
                                     'margin-bottom': 0}),
-        html.P('All data is from https://h1bdata.info/.', style={'display': 'inline-block',
+        html.P('All data is from https://h1bdata.info/', style={'display': 'inline-block',
                                                                            'position': 'absolute',
                                                                            'right': '5%',
                                                                            'color': 'white',
                                                                            'margin-bottom': 0})
 
                      ], style={'height': '50px',
-                               'background-color': '#007944',
+                               'background-color': ctags[4],
                                'margin': 0,
                                'margin-bottom': 0,
                                })

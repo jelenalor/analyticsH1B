@@ -3,6 +3,7 @@ import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 from udfs.udf import getTokenSummary
 from udfs.udf import key_title_tokens
+from udfs.udf import ctags
 
 """ Import Data """
 df = pd.read_csv(r"data/h1b19_clean.csv")
@@ -14,50 +15,64 @@ def dataForRoles(role):
     dff = df[df.tokens.isin(x)]
 
     # Roles
-    y_count_roles = dff.groupby("tokens").agg({"job_title": "count",
-                                          "base_salary": "mean"})["job_title"].values
-    y_choice_roles = dff.groupby("tokens").agg({"job_title": "count",
-                                          "base_salary": "mean"})["base_salary"].values
+    dff_roles = dff.groupby("tokens",
+                               as_index=False).agg(["count",
+                                                    "min",
+                                                    "mean",
+                                                    "max"]).sort_values(by=("base_salary", "count"), ascending=False)[:10]
+    dff_roles.columns = dff_roles.columns.get_level_values(1)
+    y_count_roles = dff_roles["count"].values
+    y_mean_roles = dff_roles["mean"].values
+    y_max_roles = dff_roles["max"].values
+    y_min_roles = dff_roles["min"].values
 
-    # Locations
-    loc_dff = dff.groupby("city").agg({"job_title": "count",
-                                       "base_salary": "mean"}).sort_values(by="job_title",
-                                                                           ascending=False)[:20]
+    # Loc
+    loc_dff = dff.groupby("city", as_index=False).agg(["count", "min", "mean", "max"]).sort_values(
+        by=("base_salary", "count"), ascending=False)[:20]
+    loc_dff.columns = loc_dff.columns.get_level_values(1)
+
     x_loc = loc_dff.index.tolist()
-    y_count_loc = loc_dff["job_title"].values
-    y_choice_loc = loc_dff["base_salary"].values
+    y_count_loc = loc_dff["count"].values
+    y_mean_loc = loc_dff["mean"].values
+    y_max_loc = loc_dff["max"].values
+    y_min_loc = loc_dff["min"].values
 
     # Companies
-    loc_dff_comp = dff.groupby("company").agg({"job_title": "count",
-                                       "base_salary": "mean"}).sort_values(by="job_title",
-                                                                           ascending=False)[:20]
+    loc_dff_comp = dff.groupby("company", as_index=False).agg(["count", \
+                                                               "min", "mean", "max"]).sort_values(
+        by=("base_salary", "count"), ascending=False)[:20]
+    loc_dff_comp.columns = loc_dff_comp.columns.get_level_values(1)
     x_comp = loc_dff_comp.index.tolist()
-    y_count_comp = loc_dff_comp["job_title"].values
-    y_choice_comp = loc_dff_comp["base_salary"].values
+    y_count_comp = loc_dff_comp["count"].values
+    y_mean_comp = loc_dff_comp["mean"].values
+    y_max_comp  = loc_dff_comp["max"].values
+    y_min_comp = loc_dff_comp["min"].values
 
-    return ((role, x, y_count_roles, y_choice_roles),
-            (role, x_loc, y_count_loc, y_choice_loc),
-            (role, x_comp, y_count_comp, y_choice_comp))
+    return ((role, x, y_count_roles, y_mean_roles, y_max_roles, y_min_roles),
+            (role, x_loc, y_count_loc, y_mean_loc, y_max_loc, y_min_loc),
+            (role, x_comp, y_count_comp, y_mean_comp, y_max_comp, y_min_comp))
 
 
 def createMultiGraphRoles(items, height):
-    role, x, y_count, y_choice = items
+    role, x, y_count, y_mean, y_max, y_min = items
     fig = make_subplots(rows=1, cols=2, specs=[[{}, {}]], shared_xaxes=True,
                         shared_yaxes=False, vertical_spacing=0.001)
 
-    zipped = list(zip(y_count, x, y_choice))
-    y_count, x, y_choice = zip(*sorted(zipped))
+    zipped = list(zip(y_count, x, y_mean, y_max, y_min))
+    y_count, x, y_mean, y_max, y_min = zip(*sorted(zipped))
     y_count = list(y_count)
     x = list(x)
-    y_choice = list(y_choice)
+    y_mean = list(y_mean)
+    y_max = list(y_max)
+    y_min = list(y_min)
 
     fig.append_trace(go.Bar(
         x=y_count,
         y=x,
         marker=dict(
-            color='#71a95a',
+            color=ctags[3],
             line=dict(
-                color='#71a95a',
+                color=ctags[3],
                 width=1),
         ),
         name='Roles Count',
@@ -66,17 +81,33 @@ def createMultiGraphRoles(items, height):
     ), 1, 1)
 
     fig.append_trace(go.Scatter(
-        x=list(y_choice), y=list(x),
+        x=list(y_min), y=list(x),
         mode='lines+markers',
-        line_color='#f35588',
+        line_color=ctags[3],
         name='mean salary',
+    ), 1, 2)
+
+    fig.append_trace(go.Scatter(
+        x=list(y_mean), y=list(x),
+        mode='lines+markers',
+        line_color=ctags[1],
+        name='mean salary',
+        fill='tonexty',
+    ), 1, 2)
+
+    fig.append_trace(go.Scatter(
+        x=list(y_max), y=list(x),
+        mode='lines+markers',
+        line_color=ctags[4],
+        name='mean salary',
+        fill='tonexty',
     ), 1, 2)
 
     fig.update_layout(
         title=dict(text=role, font=dict(
             size=20,
             family='Comic Sans MS',
-            color="#f35588"
+            color=ctags[1]
         )),
 
         yaxis=dict(
@@ -99,22 +130,23 @@ def createMultiGraphRoles(items, height):
             showline=False,
             showticklabels=True,
             showgrid=True,
-            domain=[0, 0.42],
+            domain=[0, 0.10],
         ),
         xaxis2=dict(
             zeroline=False,
             showline=False,
             showticklabels=True,
             showgrid=True,
-            domain=[0.47, 1],
+            domain=[0.12, 1],
             side='top',
-            dtick=25000,
+            dtick=50000,
         ),
         legend=dict(x=0.029, y=1.038, font_size=10),
         margin=dict(l=100, r=20, t=70, b=70),
         paper_bgcolor="white",
         plot_bgcolor='white',
         height=height,
+        width=1200
 
     )
 

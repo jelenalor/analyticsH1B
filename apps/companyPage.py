@@ -44,8 +44,9 @@ def returnTopLoc():
                                                   "textAlign": "center"}),
         dcc.Graph(id='top_loc_fig3',
                      figure=udf_comp.createMultiGraphComp(udf_comp.getDataComp("ACCENTURE LLP")))
-                     ], style={'width': '70%',
-                               'height': '700px', 'margin': '20px 250px'})
+                     ], style={'width': '80%',
+                               'textAlign': 'center',
+                               'height': '700px', 'margin': '20px auto'})
 
 
 layout = html.Div([

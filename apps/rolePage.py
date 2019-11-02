@@ -19,8 +19,9 @@ def returnTopRoles():
                   clickData={'points': [{'y': 'analyst',
                                          'text': 'analyst'}]},
                   )
-                     ], style={'width': '70%',
-                               'height': '700px', 'margin': '20px 250px'})
+                     ], style={'width': '80%',
+                               'height': '700px', 'margin': '20px auto',
+                                        "textAlign": "center"})
 
 
 def returnTopLocations():
@@ -32,8 +33,9 @@ def returnTopLocations():
                   clickData={'points': [{'y': 'analyst',
                                          'text': 'analyst'}]},
                   )
-                     ], style={'width': '70%',
-                               'height': '900px', 'margin': '20px 250px'})
+                     ], style={'width': '80%',
+                               'height': '900px', 'margin': '20px auto',
+                                        "textAlign": "center"})
 
 
 def returnTopCompanies():
@@ -45,8 +47,9 @@ def returnTopCompanies():
                   clickData={'points': [{'y': 'analyst',
                                          'text': 'analyst'}]},
                   )
-                     ], style={'width': '70%',
-                               'height': '900px', 'margin': '20px 250px'})
+                     ], style={'width': '80%',
+                               'height': '900px', 'margin': '20px auto',
+                                        "textAlign": "center"})
 
 
 layout = html.Div([
@@ -80,6 +83,6 @@ def updateTopCompanies(value):
     items_roles = udf_rol.dataForRoles(str(value))[0]
     items_locations = udf_rol.dataForRoles(str(value))[1]
     items_companies = udf_rol.dataForRoles(str(value))[2]
-    return udf_rol.createMultiGraphRoles(items_roles, 500), \
+    return udf_rol.createMultiGraphRoles(items_roles, 600), \
            udf_rol.createMultiGraphRoles(items_locations, 700), \
            udf_rol.createMultiGraphRoles(items_companies, 700)

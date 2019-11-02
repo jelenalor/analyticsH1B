@@ -3,7 +3,7 @@ import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 from udfs.udf import getTokenSummary
 from udfs.udf import key_title_tokens
-
+from udfs.udf import ctags
 
 """ Import Data """
 df = pd.read_csv(r"data/h1b19_clean.csv")
@@ -40,7 +40,7 @@ def create_scatter_comp(comp):
                 'size': 15,
                 'opacity': 0.8,
                 'line': {'width': 0.5, 'color': 'black'},
-                'color': '#f35588'}
+                'color': ctags[1]}
         ))
 
     traces.append(go.Scatter(
@@ -52,7 +52,7 @@ def create_scatter_comp(comp):
         marker={
             'size': 15,
             'line': {'width': 0.5, 'color': 'black'},
-            'color': '#71a95a'}
+            'color': ctags[3]}
     ))
 
     return {
@@ -78,7 +78,7 @@ def createBoxPlot(comp):
     traces = []
     for r in x:
         traces.append(go.Box(y=dff[dff.tokens == r]["base_salary"],
-                         name=r, marker={"size": 4, "color": "#71a95a"}))
+                         name=r, marker={"size": 4, "color": ctags[3]}))
 
     return {"data": traces,
             "layout": go.Layout(autosize=True,
@@ -90,43 +90,54 @@ def createBoxPlot(comp):
                                         font=dict(
                                             size=20,
                                             family='Comic Sans MS',
-                                            color="#f35588")),
+                                            color=ctags[1])),
                                 height=500)}
 
 
 def getDataComp(comp):
     top_loc = df[df.company == comp].groupby("city").count()["job_title"].sort_values(ascending=False)[
                     :20].index.tolist()
-    dff = df[df.city.isin(top_loc)].drop(["state"], axis=1)
-    dff_gp = dff.groupby("city").agg( \
-        {"job_title": "count", "base_salary": "mean"} \
-        ).rename(columns={"job_title": "count"}).sort_values(by="count", ascending=False)
+    dff = df[(df.city.isin(top_loc) & (df.company == comp))].drop(["state"], axis=1)
+    dff_gp = dff.groupby("city", as_index=False).agg(["count", "min", "mean", "max"]).sort_values(
+        by=("base_salary", "count"), ascending=False)
+    dff_gp.columns = dff_gp.columns.get_level_values(1)
 
     dff_gp = dff_gp.sort_values(by="count")
     x = dff_gp.index.values
     y_count = dff_gp["count"].values
-    y_choice = dff_gp["base_salary"].values
-    return comp, x, y_count, y_choice
+    y_min = dff_gp["min"].values
+    y_mean = dff_gp["mean"].values
+    y_max = dff_gp["max"].values
+
+    min_text = [tuple(dff[(dff.base_salary == i) & \
+                          (dff.city==j)].iloc[0][["job_title"]].values) for i, j in zip(y_min, x)]
+    max_text = [tuple(dff[(dff.base_salary == i) & \
+                          (dff.city==j)].iloc[0][["job_title"]].values) for i, j in zip(y_max, x)]
+
+    return comp, x, y_count, y_min, y_mean, y_max, min_text, max_text
 
 
 def createMultiGraphComp(items):
-    comp, x, y_count, y_choice = items
+    comp, x, y_count, y_min, y_mean, y_max, min_text, max_text = items
+
     fig = make_subplots(rows=1, cols=2, specs=[[{}, {}]], shared_xaxes=True,
                         shared_yaxes=False, vertical_spacing=0.001)
 
-    zipped = list(zip(y_count, x, y_choice))
-    y_count, x, y_choice = zip(*sorted(zipped))
+    zipped = list(zip(y_count, x, y_min, y_mean, y_max))
+    y_count, x, y_min, y_mean, y_max = zip(*sorted(zipped))
     y_count = list(y_count)
     x = list(x)
-    y_choice = list(y_choice)
+    y_min = list(y_min)
+    y_mean = list(y_mean)
+    y_max = list(y_max)
 
     fig.append_trace(go.Bar(
         x=y_count,
         y=x,
         marker=dict(
-            color='#71a95a',
+            color=ctags[3],
             line=dict(
-                color='#71a95a',
+                color=ctags[3],
                 width=1),
         ),
         name='Roles Count',
@@ -134,19 +145,41 @@ def createMultiGraphComp(items):
         width=0.4,
     ), 1, 1)
 
+    fig.append_trace(go.Scatter(
+        x=list(y_min), y=list(x),
+        mode='lines+markers',
+        line_color=ctags[3],
+        name='min salary',
+        hoveron='points',
+        text=min_text,
+        hoverinfo='text+x+y'
+    ), 1, 2)
 
     fig.append_trace(go.Scatter(
-        x=list(y_choice), y=list(x),
+        x=list(y_mean), y=list(x),
         mode='lines+markers',
-        line_color='#f35588',
+        line_color=ctags[1],
         name='mean salary',
+        fill='tonexty',
     ), 1, 2)
+
+    fig.append_trace(go.Scatter(
+        x=list(y_max), y=list(x),
+        mode='lines+markers',
+        line_color=ctags[4],
+        name='max salary',
+        fill='tonexty',
+        hoveron='points',
+        text=max_text,
+        hoverinfo='text+x+y'
+    ), 1, 2)
+
 
     fig.update_layout(
         title=dict(text=comp, font=dict(
             size=20,
             family='Comic Sans MS',
-            color="#f35588"
+            color=ctags[1]
         )),
 
         yaxis=dict(
@@ -169,22 +202,23 @@ def createMultiGraphComp(items):
             showline=False,
             showticklabels=True,
             showgrid=True,
-            domain=[0, 0.42],
+            domain=[0, 0.10],
         ),
         xaxis2=dict(
             zeroline=False,
             showline=False,
             showticklabels=True,
             showgrid=True,
-            domain=[0.47, 1],
+            domain=[0.12, 1],
             side='top',
-            dtick=25000,
+            dtick=50000,
         ),
         legend=dict(x=0.029, y=1.038, font_size=10),
         margin=dict(l=100, r=20, t=70, b=70),
         paper_bgcolor="white",
         plot_bgcolor='white',
         height=600,
+        width=1400
 
     )
 
