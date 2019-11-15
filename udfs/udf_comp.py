@@ -36,6 +36,7 @@ def create_scatter_comp(comp):
             text=[i for i in name],
             customdata=name,
             mode='markers',
+            name="",
             marker={
                 'size': 15,
                 'opacity': 0.8,
@@ -49,6 +50,7 @@ def create_scatter_comp(comp):
         text=[name_click],
         customdata=[name_click],
         mode='markers',
+        name="",
         marker={
             'size': 15,
             'line': {'width': 0.5, 'color': 'black'},
