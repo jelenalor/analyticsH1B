@@ -11,7 +11,10 @@ app = dash.Dash(__name__, server=server, meta_tags=[
         'content': 'Analysis of public H1B salary data by city, company and job titles'
     },
     {
+        'title': "H1B Analytics"
+    },
+    {
         'property': 'og:image',
-        'content': 'assets/image.png'
+        'content': 'https://dash.plot.ly/assets/images/logo.png'
     }])
 app.config.suppress_callback_exceptions = True
