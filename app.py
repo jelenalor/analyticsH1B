@@ -28,3 +28,4 @@ app = dash.Dash(__name__, server=server, meta_tags=[
     }
 ])
 app.config.suppress_callback_exceptions = True
+app.title = 'H1B Analytics'
