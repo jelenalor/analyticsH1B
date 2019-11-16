@@ -4,7 +4,6 @@ import flask
 
 server = flask.Flask(__name__)
 app = dash.Dash(__name__,
-                assets_external_path='https://analytics-h1b.herokuapp.com/assets/',
                 server=server,
                 meta_tags=[
     # A description of the app, used by e.g.
@@ -15,7 +14,7 @@ app = dash.Dash(__name__,
     },
     {
         'property': 'og:image',
-        'content': 'https://analytics-h1b.herokuapp.com/assets/image.jpg'
+        'content': 'https://analytics-h1b.herokuapp.com/assets/favicon.ico'
     },
     {
         'property': 'og:title',
@@ -31,5 +30,4 @@ app = dash.Dash(__name__,
     }
 ])
 app.config.suppress_callback_exceptions = True
-app.scripts.config.serve_locally = False
 app.title = 'H1B Analytics'
