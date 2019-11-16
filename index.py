@@ -15,6 +15,9 @@ server = app.server
 """ Define Layout with three tabs"""
 
 app.layout = html.Div([
+html.Div([
+    html.Img(src='/assets/image.png')
+], style={'display': 'none'}),
     dcc.Tabs(id="tabs", value='tab-1', children=[
         dcc.Tab(label='Explore by City', value='tab-1'),
         dcc.Tab(label='Explore by Role', value='tab-2'),
