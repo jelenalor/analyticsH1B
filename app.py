@@ -4,6 +4,7 @@ import flask
 
 server = flask.Flask(__name__)
 app = dash.Dash(__name__,
+                static_folder='static',
                 server=server,
                 meta_tags=[
     # A description of the app, used by e.g.
