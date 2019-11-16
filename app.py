@@ -13,18 +13,22 @@ app = dash.Dash(__name__,
         'content': 'Analysis of public H1B salary data by city, company and job titles'
     },
     {
+        'data-rh': 'true',
         'property': 'og:image',
         'content': 'https://analytics-h1b.herokuapp.com/assets/favicon.ico'
     },
     {
+        'data-rh': 'true',
         'property': 'og:title',
         'content': 'image'
     },
     {
+        'data-rh': 'true',
         'property': 'og:description',
         'content': 'description'
     },
     {
+        'data-rh': 'true',
         'property': 'og:url',
         'content': 'https://analytics-h1b.herokuapp.com/'
     }
