@@ -20,3 +20,7 @@
 /data/list_of_companies.json
 /data/tokens_summary.csv
 /data/h1b19_clean.csv
+venv
+*.pyc
+.DS_Store
+.env
