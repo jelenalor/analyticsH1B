@@ -10,6 +10,7 @@ from apps import cityPage, rolePage, companyPage
 # external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 # external_stylesheets=external_stylesheets
 
+server = app.server
 
 """ Define Layout with three tabs"""
 
