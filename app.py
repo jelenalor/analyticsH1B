@@ -3,7 +3,10 @@ import flask
 
 
 server = flask.Flask(__name__)
-app = dash.Dash(__name__, server=server, meta_tags=[
+app = dash.Dash(__name__,
+                assets_external_path='https://miro.medium.com/max/1200/0*jICjTiwfGMojvl_l.jpg',
+                server=server,
+                meta_tags=[
     # A description of the app, used by e.g.
     # search engines when displaying search results.
     {
@@ -28,4 +31,5 @@ app = dash.Dash(__name__, server=server, meta_tags=[
     }
 ])
 app.config.suppress_callback_exceptions = True
+app.scripts.config.serve_locally = False
 app.title = 'H1B Analytics'
