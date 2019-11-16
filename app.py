@@ -15,7 +15,7 @@ app = dash.Dash(__name__,
     {
         'data-rh': 'true',
         'property': 'og:image',
-        'content': '/assets/image.png'
+        'content': 'https://analytics-h1b.herokuapp.com/assets/image.png'
     },
     {
         'data-rh': 'true',
