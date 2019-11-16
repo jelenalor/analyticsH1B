@@ -11,3 +11,4 @@ venv
 *.pyc
 .DS_Store
 .env
+/data/h1b19_clean.csv
