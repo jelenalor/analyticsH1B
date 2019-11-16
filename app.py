@@ -15,7 +15,7 @@ app = dash.Dash(__name__,
     {
         'data-rh': 'true',
         'property': 'og:image',
-        'content': 'assets/image.png'
+        'content': '/assets/image.png'
     },
     {
         'data-rh': 'true',
