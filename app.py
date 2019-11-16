@@ -12,7 +12,7 @@ app = dash.Dash(__name__, server=server, meta_tags=[
     },
     {
         'property': 'og:image',
-        'content': 'https://dash.plot.ly/assets/images/logo.png'
+        'content': 'https://miro.medium.com/max/1200/0*jICjTiwfGMojvl_l.jpg'
     },
     {
         'property': 'og:title',
