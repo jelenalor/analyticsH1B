@@ -15,17 +15,17 @@ app = dash.Dash(__name__,
     {
         'data-rh': 'true',
         'property': 'og:image',
-        'content': '/assets/image.png'
+        'content': 'https://miro.medium.com/max/1200/0*jICjTiwfGMojvl_l.jpg'
     },
     {
         'data-rh': 'true',
         'property': 'og:title',
-        'content': 'image'
+        'content': 'H1B Analytics'
     },
     {
         'data-rh': 'true',
         'property': 'og:description',
-        'content': 'description'
+        'content': 'Analysis of public H1B salary data by city, company and job titles'
     },
     {
         'data-rh': 'true',
