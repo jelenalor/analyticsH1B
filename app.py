@@ -34,6 +34,4 @@ app = dash.Dash(__name__,
     }
 ])
 app.config.suppress_callback_exceptions = True
-app.config.serve_static_assets = True
-app.config.assets.compile = True
 app.title = 'H1B Analytics'
