@@ -13,6 +13,8 @@ LINK | https://h1bdata.info/ <br>
 CODE (scrap - Selenium) | https://github.com/jelenalor/analyticsH1B/blob/master/getDataCompanies.py <br>
 CODE (scrap - Requests) | https://github.com/jelenalor/analyticsH1B/blob/master/getData.py <br>
 
+![image](https://user-images.githubusercontent.com/31029142/68996492-da481700-0868-11ea-8a16-9871d16d2b7b.PNG)
+
 
 
 
