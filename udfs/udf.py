@@ -318,7 +318,7 @@ def returnFooter():
                                     'left': '40%',
                                     'color': 'white',
                                     'margin-bottom': 0}),
-        html.P('All data is from https://h1bdata.info/', style={'display': 'inline-block',
+        html.P('All data is from (2019 only) - https://h1bdata.info/', style={'display': 'inline-block',
                                                                            'position': 'absolute',
                                                                            'right': '5%',
                                                                            'color': 'white',
