@@ -15,7 +15,7 @@ app = dash.Dash(__name__,
     {
         'data-rh': 'true',
         'property': 'og:image',
-        'content': 'https://miro.medium.com/max/1200/0*jICjTiwfGMojvl_l.jpg'
+        'content': 'assets/image.png'
     },
     {
         'data-rh': 'true',
@@ -25,7 +25,7 @@ app = dash.Dash(__name__,
     {
         'data-rh': 'true',
         'property': 'og:description',
-        'content': 'Analysis of public H1B salary data by city, company and job titles'
+        'content': 'Interactive Dashboard presenting the analysis of public H1B salary data by city, company and job titles...'
     },
     {
         'data-rh': 'true',
@@ -34,4 +34,6 @@ app = dash.Dash(__name__,
     }
 ])
 app.config.suppress_callback_exceptions = True
+app.config.serve_static_assets = True
+app.config.assets.compile = True
 app.title = 'H1B Analytics'
