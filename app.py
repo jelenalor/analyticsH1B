@@ -4,7 +4,7 @@ import flask
 
 server = flask.Flask(__name__)
 app = dash.Dash(__name__,
-                assets_external_path='https://miro.medium.com/max/1200/0*jICjTiwfGMojvl_l.jpg',
+                assets_external_path='https://analytics-h1b.herokuapp.com/assets/',
                 server=server,
                 meta_tags=[
     # A description of the app, used by e.g.
@@ -15,7 +15,7 @@ app = dash.Dash(__name__,
     },
     {
         'property': 'og:image',
-        'content': 'https://miro.medium.com/max/1200/0*jICjTiwfGMojvl_l.jpg'
+        'content': 'https://analytics-h1b.herokuapp.com/assets/image.jpg'
     },
     {
         'property': 'og:title',
