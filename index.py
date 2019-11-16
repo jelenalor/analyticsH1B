@@ -16,7 +16,7 @@ server = app.server
 
 app.layout = html.Div([
 html.Div([
-    html.Img(src='/static/image.png')
+    html.Img(src='/image.png')
 ], ),
     dcc.Tabs(id="tabs", value='tab-1', children=[
         dcc.Tab(label='Explore by City', value='tab-1'),
