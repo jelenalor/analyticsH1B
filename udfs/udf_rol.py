@@ -6,30 +6,35 @@ from udfs.udf import key_title_tokens
 from udfs.udf import ctags
 
 """ Import Data """
-df = pd.read_csv(r"data/h1b19_clean.csv")
-tokens_summary = getTokenSummary(df, key_title_tokens)
+# df = pd.read_csv(r"data/h1b19_clean.csv")
+# tokens_summary = getTokenSummary(df, key_title_tokens)
 
 
 def dataForRoles(role):
-    x = tokens_summary[role]["top_roles"][:-1]
-    dff = df[df.tokens.isin(x)]
+    dff_roles = pd.read_csv(r"data/%s/dff_roles.csv" % role, index_col="tokens")
+    loc_dff = pd.read_csv(r"data/%s/loc_dff.csv" % role, index_col="city")
+    loc_dff_comp = pd.read_csv(r"data/%s/loc_dff_comp.csv" % role, index_col="company")
+
+    # x = tokens_summary[role]["top_roles"][:-1]
+    # dff = df[df.tokens.isin(x)]
 
     # Roles
-    dff_roles = dff.groupby("tokens",
-                               as_index=False).agg(["count",
-                                                    "min",
-                                                    "mean",
-                                                    "max"]).sort_values(by=("base_salary", "count"), ascending=False)[:10]
-    dff_roles.columns = dff_roles.columns.get_level_values(1)
+    # dff_roles = dff.groupby("tokens",
+    #                            as_index=False).agg(["count",
+    #                                                 "min",
+    #                                                 "mean",
+    #                                                 "max"]).sort_values(by=("base_salary", "count"), ascending=False)[:10]
+    # dff_roles.columns = dff_roles.columns.get_level_values(1)
+    x = dff_roles.index.tolist()
     y_count_roles = dff_roles["count"].values
     y_mean_roles = dff_roles["mean"].values
     y_max_roles = dff_roles["max"].values
     y_min_roles = dff_roles["min"].values
 
     # Loc
-    loc_dff = dff.groupby("city", as_index=False).agg(["count", "min", "mean", "max"]).sort_values(
-        by=("base_salary", "count"), ascending=False)[:20]
-    loc_dff.columns = loc_dff.columns.get_level_values(1)
+    # loc_dff = dff.groupby("city", as_index=False).agg(["count", "min", "mean", "max"]).sort_values(
+    #     by=("base_salary", "count"), ascending=False)[:20]
+    # loc_dff.columns = loc_dff.columns.get_level_values(1)
 
     x_loc = loc_dff.index.tolist()
     y_count_loc = loc_dff["count"].values
@@ -38,10 +43,10 @@ def dataForRoles(role):
     y_min_loc = loc_dff["min"].values
 
     # Companies
-    loc_dff_comp = dff.groupby("company", as_index=False).agg(["count", \
-                                                               "min", "mean", "max"]).sort_values(
-        by=("base_salary", "count"), ascending=False)[:20]
-    loc_dff_comp.columns = loc_dff_comp.columns.get_level_values(1)
+    # loc_dff_comp = dff.groupby("company", as_index=False).agg(["count", \
+    #                                                            "min", "mean", "max"]).sort_values(
+    #     by=("base_salary", "count"), ascending=False)[:20]
+    # loc_dff_comp.columns = loc_dff_comp.columns.get_level_values(1)
     x_comp = loc_dff_comp.index.tolist()
     y_count_comp = loc_dff_comp["count"].values
     y_mean_comp = loc_dff_comp["mean"].values
