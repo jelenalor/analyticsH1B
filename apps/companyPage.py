@@ -40,7 +40,7 @@ def returnSalDist():
 def returnTopLoc():
     return html.Div([html.H3('Top Locations Analysis',
                              style={"textAlign": "center"}),
-                     html.P('Discover the companies with the most jobs and its corresponding average salaries', style={'padding': '10px 10px',
+                     html.P('Discover the companies with the most jobs and its corresponding salaries', style={'padding': '10px 10px',
                                                   "textAlign": "center"}),
         dcc.Graph(id='top_loc_fig3',
                      figure=udf_comp.createMultiGraphComp(udf_comp.getDataComp("ACCENTURE LLP")))

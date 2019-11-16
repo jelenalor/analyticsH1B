@@ -27,7 +27,7 @@ def returnTopRoles():
 def returnTopLocations():
     return html.Div([html.H3('Top Locations Analysis',
                              style={"textAlign": "center"}),
-                     html.P("Explore the cities with the most jobs and the corresponding average salary for the above role type.", style={'padding': '10px 10px',
+                     html.P("Explore the cities with the most jobs and the corresponding salaries for the above role type.", style={'padding': '10px 10px',
                                                   "textAlign": "center"}),
         dcc.Graph(id='top_loc_fig2',
                   clickData={'points': [{'y': 'analyst',
@@ -41,7 +41,7 @@ def returnTopLocations():
 def returnTopCompanies():
     return html.Div([html.H3('Top Companies Analysis',
                              style={"textAlign": "center"}),
-                     html.P("Explore companies with the most jobs available and the corresponding average salary these companies pay for the above chosen role type.", style={'padding': '10px 10px',
+                     html.P("Explore companies with the most jobs available and the corresponding salaries these companies pay for the above chosen role type.", style={'padding': '10px 10px',
                                                   "textAlign": "center"}),
         dcc.Graph(id='top_comp_fig2',
                   clickData={'points': [{'y': 'analyst',
