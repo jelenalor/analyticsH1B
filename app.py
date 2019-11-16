@@ -11,10 +11,20 @@ app = dash.Dash(__name__, server=server, meta_tags=[
         'content': 'Analysis of public H1B salary data by city, company and job titles'
     },
     {
-        'title': "H1B Analytics"
-    },
-    {
         'property': 'og:image',
         'content': 'https://dash.plot.ly/assets/images/logo.png'
-    }])
+    },
+    {
+        'property': 'og:title',
+        'content': 'image'
+    },
+    {
+        'property': 'og:description',
+        'content': 'description'
+    },
+    {
+        'property': 'og:url',
+        'content': 'https://analytics-h1b.herokuapp.com/'
+    }
+])
 app.config.suppress_callback_exceptions = True
